@@ -1,15 +1,19 @@
-from rest_framework import permissions, status
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from .models import Todo
+from .permissions import IsOwner
 from .serializers import TodoSerializer
 
 # Create your views here.
 
 
 class TodoListAPIView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, IsOwner]
 
     def get(self, request, *args, **kwargs):
         todos = Todo.objects.filter(user=request.user.id)
@@ -31,7 +35,8 @@ class TodoListAPIView(APIView):
 
 
 class TodoDetailApiView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, IsOwner]
 
     def get_object(self, todo_id, user_id):
         try:
