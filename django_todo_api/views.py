@@ -14,6 +14,7 @@ from .serializers import TodoSerializer
 class TodoListAPIView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, IsOwner]
+    serializer_class = TodoSerializer
 
     def get(self, request, *args, **kwargs):
         todos = Todo.objects.filter(user=request.user.id)
@@ -37,6 +38,7 @@ class TodoListAPIView(APIView):
 class TodoDetailApiView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, IsOwner]
+    serializer_class = TodoSerializer
 
     def get_object(self, todo_id, user_id):
         try:
